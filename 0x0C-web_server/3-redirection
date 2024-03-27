@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# A Script that configures a new Ubuntu machine to respect above requirements
+
+sudo apt-get update
+sudo apt-get install -y nginx
+
+#this command creates an index file like index.html
+
+echo "Hello World" | sudo tee /var/www/html/index.html
+
+#this command creates a string that configures the redirection
+new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=xJJsoquu70o permanent;"
+sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
+
+sudo service nginx restart
