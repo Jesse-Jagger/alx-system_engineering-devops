@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # we are using puppet to make changes to the default ssh config file
 # so that one can connect to a server without typing a password.
 
