@@ -3,37 +3,35 @@
 # Nginx where it should be listening on port 80
 # Serve a page that would return a Hello World string
 
-# Updates nginx
+# Updating and installing nginx
 sudo apt update
-
-#installs nginx
 sudo apt install -y nginx
 
-# starts nginx service
+# starting nginx service
 sudo service nginx start
 
-# allows nginx on firewall
+# allowing nginx on firewall
 sudo ufw allow 'Nginx HTTP'
 
 # Give the user ownership to website files for easy editing
 sudo chown -R "$USER":"$USER" /var/www/html
 sudo chmod -R 755 /var/www
 
-# Creates new index
+# Creating new index
 echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
 
 # Setting up /redirect_me to my github profile
 sudo sed -i '24i\       rewrite ^/redirect_me https://github.com/jesse-jagger permanent;' /etc/nginx/sites-available/default
 
-# Sets up a 404 page
+# Set up a 404 page
 echo "Ceci n'est pas une page" >> /var/www/html/error_404.html
 sudo sed -i '25i\       error_page 404 /error_404.html;' /etc/nginx/sites-available/default
 
 # http header respons
 sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
 
-#Test syntax error
+# Test syntax error
 sudo nginx -t
 
-#restarts the server
+# restart server
 sudo service nginx restart
