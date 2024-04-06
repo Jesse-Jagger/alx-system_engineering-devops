@@ -1,4 +1,4 @@
-cript to install and configure HAProxy on lb-01 server
+#A script to install and configure HAProxy on lb-01 server
 # Configures HAProxy to send traffic to web-01 and web-02 servers
 # Distribute requests using a roundrobin algorithm
 # Make sure that HAProxy can be managed via an init script
@@ -10,11 +10,11 @@ apt -y install haproxy
 # edit config file
 server_config=\
 "
-frontend  mappiahca.tech_frontend
+frontend toptechs.tech_frontend
         bind *:80
         mode http
-        default_backend mappiahca.tech_backend
-backend mappiahca.tech_backend
+        default_backend toptechs.tech_backend
+backend toptechs.tech_backend
         balance roundrobin
         server 423141-web-01 3.84.237.53:80 check
         server 423141-web-02 34.227.91.94:80 check
