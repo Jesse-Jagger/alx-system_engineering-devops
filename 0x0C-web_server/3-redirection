@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
-
 # A Script that configures a new Ubuntu machine to respect above requirements
+# The redirection is configured as a "301 Moved Permanently"
 
 sudo apt-get update
-sudo apt-get install -y nginx
+sudo apt-get install nginx -y
+ufw allow 'Nginx HTTP'
 
-#this command creates an index file like index.html
+sudo chown -R "$USER":"$USER" /var/www
+sudo chown -R "$USER":"$USER" /etc/nginx/sites-available/default
 
-echo "Hello World" | sudo tee /var/www/html/index.html
+touch /var/www/html/index.nginx-debian.html
+echo 'Hello World!' > /var/www/html/index.nginx-debian.html
 
-#this command creates a string that configures the redirection
-new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=xJJsoquu70o permanent;"
-sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
+echo "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /var/www/html;
+     index       index.html index.htm;
+     location /redirect_me {
+        return 301 https://github.com/Jesse-Jagger;
+    }
+}" > /etc/nginx/sites-available/default
 
 sudo service nginx restart

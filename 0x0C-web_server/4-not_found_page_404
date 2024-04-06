@@ -1,18 +1,37 @@
 #!/usr/bin/env bash
 #Configures your Nginx server to have a custom 404 page that contains the string
+#+    Listens on port 80.
+#+    Returns a page containing "Hello World!" when queried
+#+    at the root with a curl GET request.
+# Configures /redirect_me as a "301 Moved Permanently".
+# Includes a custom 404 page containing "Ceci n'est pas une page".
 
 sudo apt-get update
-sudo apt-get install -y nginx
+sudo apt-get -y install nginx
+sudo ufw allow 'Nginx HTTP'
 
-#this code is to redirect a specific endpoint (like: redirect /redirect_me to https://www.youtv.com)
-echo "Hello World!" | sudo tee /var/www/html/index.html
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtv.com permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+sudo chown -R "$USER:$USER" /var/www
+sudo chown -R "$USER:$USER" /etc/nginx/sites-available/default
 
-#this code is to create error page and add a redirect for error 404
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
-string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
-sudo sed -i "s/listen 80 default_server;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+touch /var/www/html/index.html
+echo 'Hello World!' > /var/www/html/index.html
 
-# restarts the server
+touch /var/www/html/404.html
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
+echo "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /var/www/html;
+     index       index.html index.htm;
+     location /redirect_me {
+        return 301 https://github.com/Jesse-Jagger;
+    }
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
+
 sudo service nginx restart
