@@ -1,4 +1,5 @@
-#To automate a task that createss a custom HTTP header response
+# Setup New Ubuntu server with nginx
+# and add a custom HTTP header
 
 exec { 'update system':
         command => '/usr/bin/apt-get update',
@@ -27,3 +28,4 @@ service {'nginx':
 	ensure => running,
 	require => Package['nginx']
 }
+
