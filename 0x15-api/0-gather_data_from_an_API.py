@@ -26,7 +26,7 @@ if employee_id.isdigit():
         employee_data = employee_response.read()
         todos_data = todos_response.read()
 
-        employee = json.loads(employee_data)  # Fix variable name
+        employee = json.loads(employee_data)
         todos = json.loads(todos_data)
 
         name = employee.get("name")
